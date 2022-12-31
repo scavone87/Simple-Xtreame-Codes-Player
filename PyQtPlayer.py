@@ -1,31 +1,21 @@
-import sys
+import logging
+import multiprocessing
+import platform
 import re
 import subprocess
-import multiprocessing
-import urllib.request
+import sys
 import urllib.error
 import urllib.parse
-import logging
-import pandas as pd
+import urllib.request
 
-from PyQt6.QtWidgets import (
-    QApplication,
-    QWidget,
-    QLabel,
-    QLineEdit,
-    QPushButton,
-    QVBoxLayout,
-    QHBoxLayout,
-    QTableWidget,
-    QMessageBox,
-    QProgressDialog,
-    QComboBox,
-    QTableWidgetItem,
-    QMenuBar,
-    QMenu
-)
+import pandas as pd
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction
+from PyQt6.QtWidgets import (QApplication, QComboBox, QHBoxLayout, QLabel,
+                             QLineEdit, QMenu, QMenuBar, QMessageBox,
+                             QProgressDialog, QPushButton, QTableWidget,
+                             QTableWidgetItem, QVBoxLayout, QWidget)
+
 import xtream
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -109,6 +99,10 @@ class MainWindow(QWidget):
         self.table1 = QTableWidget(5,1)
         self.table2 = QTableWidget(5,1)
         self.table3 = QTableWidget(5,1)
+
+        self.table1.setEnabled(False)
+        self.table2.setEnabled(False)
+        self.table3.setEnabled(False)
 
         # Imposta la larghezza delle colonne delle tabelle 1 e 2 sulla larghezza della tabella
         self.table1.setColumnWidth(0, self.table1.width())
@@ -238,7 +232,14 @@ class MainWindow(QWidget):
 
     def playChannel(self):
         try:
-           subprocess.Popen(["open", "-a", "vlc", self.url_channel])
+            if platform.system() == 'Windows':
+                logging.info('Il sistema operativo è Windows')
+                subprocess.Popen(["C:/Program Files/VideoLAN/VLC/vlc.exe", self.url_channel])
+            elif platform.system() == 'Darwin':
+                logging.info('Il sistema operativo è Mac')
+                subprocess.Popen(["open", "-a", "vlc", self.url_channel])
+            else:
+                logging.info('Il sistema operativo non è Windows o Mac')    
         except FileNotFoundError:
             QMessageBox.warning(self,"Error", "VLC non è installato.")
 
@@ -313,6 +314,7 @@ class MainWindow(QWidget):
             self.progress_dialog.hide() 
 
     def populateCategoryTable(self):
+        self.table1.setEnabled(True)
         # Imposta il numero di righe e colonne della tabella
         self.table1.setRowCount(self.df_category.shape[0])
         self.table1.setColumnCount(1)
@@ -322,6 +324,7 @@ class MainWindow(QWidget):
 
     def populateChannelsTable(self):
         # Imposta il numero di righe e colonne della tabella
+        self.table2.setEnabled(True)
         self.table2.setRowCount(self.df_channels.shape[0])
         self.table2.setColumnCount(1)
         # Inserisci i dati del dataframe nella tabella
@@ -330,6 +333,7 @@ class MainWindow(QWidget):
 
     def populateSeriesEpisodeTable(self):
         # Imposta il numero di righe e colonne della tabella
+        self.table3.setEnabled(True)
         self.table3.setRowCount(self.df_series.shape[0])
         self.table3.setColumnCount(1)
         # Inserisci i dati del dataframe nella tabella
