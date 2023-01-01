@@ -26,8 +26,8 @@ Apri una finestra del terminale e naviga alla cartella del repository.
 
 Per utilizzare questa applicazione, segui questi passi:
 
--  Apri una finestra del terminale e naviga alla cartella del repository.
-- Esegui il comando python main.py per avviare l'applicazione.
+- Apri una finestra del terminale e naviga alla cartella del repository.
+- Esegui il comando `python main.py` per avviare l'applicazione.
 - Seleziona il tipo di contenuti che vuoi visualizzare (Live, VOD o Serie TV) dal menu a tendina.
 Utilizza la casella di ricerca per filtrare i contenuti disponibili.
 - Fai clic su uno dei contenuti nella tabella per avviarne la riproduzione.
