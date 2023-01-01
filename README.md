@@ -20,7 +20,7 @@ Per installare questa applicazione, segui questi passi:
 - Assicurati di avere i requisiti sopra elencati installati sul tuo sistema, incluso VLC Media Player.
 - Scarica o clona il repository dal seguente link: https://github.com/scavone87/Simple-Xtreame-Codes-Player
 Apri una finestra del terminale e naviga alla cartella del repository.
-- Esegui il comando pip install -r requirements.txt per installare le dipendenze necessarie.
+- Esegui il comando `pip install -r requirements.txt` per installare le dipendenze necessarie.
 
 ## Utilizzo
 
