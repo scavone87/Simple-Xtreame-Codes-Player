@@ -311,11 +311,14 @@ class MainWindow(QWidget):
           status = data["user_info"]["status"]
           expire_date = data["user_info"]["exp_date"]
           self.label1.setText(message)
-          self.label2.setText(status)
-          self.label3.setText(expire_date)
+          self.label2.setText(f"Stauts: {status}")
+          self.label3.setText(f"Scadenza: {expire_date}")
           logging.debug(
               f"{message}, - Status: {status} - Data di scadenza: {expire_date}")
           self.option_category = self.combo_box.currentText()
+          if self.option_category == xtream.seriesType:
+            self.hbox.addWidget(self.table3)
+            self.table3.show()
           catgegory_list = xtream.categories(self.option_category).json()
           self.df_category = pd.DataFrame(catgegory_list)
           self.populateCategoryTable()
