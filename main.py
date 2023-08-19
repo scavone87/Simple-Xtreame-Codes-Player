@@ -7,6 +7,7 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
+import datetime
 
 import pandas as pd
 from PyQt6.QtCore import Qt
@@ -216,28 +217,33 @@ class MainWindow(QWidget):
         stream_id = selected_item.get("stream_id")
         series_id = selected_item.get("series_id")
         container_extension = selected_item.get("container_extension")
-        if container_extension is not None and series_id is None:
+        stream_type = selected_item.get("stream_type")
+        if stream_type == "movie":
             # È un film
             self.url_channel = f"{xtream.server}:8080/movie/{xtream.username}/{xtream.password}/{stream_id}.{container_extension}"
             logging.debug("URL del film: ", self.url_channel)
             self.progress_dialog.hide()
             self.playChannel()
+            return
 
-        if stream_id is not None and container_extension is None:
+        if stream_type == "live":
             # È un live
             self.url_channel = f"{xtream.server}:8080/{xtream.username}/{xtream.password}/{stream_id}"
             logging.debug("URL del canale live: ", self.url_channel)
             self.progress_dialog.hide()
             self.playChannel()
+            return
         elif series_id is not None:
             self.df_series = pd.DataFrame()
             seriesSeasons = xtream.seriesInfoByID(series_id).json()
             self.df_series = creaDataframeSeries(seriesSeasons)
             self.populateSeriesEpisodeTable()
             self.progress_dialog.hide()
+            return
         else:
             self.progress_dialog.hide()
             QMessageBox.warning(self, "Errore", "Qualcosa è andato storto")
+            return
 
     def playChannel(self):
         try:
@@ -307,9 +313,11 @@ class MainWindow(QWidget):
           self.progress_dialog.show()  # Mostra la ProgressDialog
           logging.debug("Progress Dialog mostrata")
           data = xtream_auth(server, username, password)
+          logging.debug(f"Data:  {data}")
           message = data["user_info"]["message"]
           status = data["user_info"]["status"]
-          expire_date = data["user_info"]["exp_date"]
+          expire_date = datetime.datetime.fromtimestamp(int(data["user_info"]["exp_date"]))
+          expire_date = expire_date.strftime("%d-%m-%Y %H:%M:%S")
           self.label1.setText(message)
           self.label2.setText(f"Stauts: {status}")
           self.label3.setText(f"Scadenza: {expire_date}")
