@@ -61,7 +61,7 @@ class MainWindow(QWidget):
 
         # Aggiungi il menu "Aiuto" alla barra dei menu
         menu_bar.addMenu(help_menu)
-
+        
         # Aggiungi la barra dei menu alla finestra principale
 
         self.df_category = pd.DataFrame()
@@ -295,6 +295,7 @@ class MainWindow(QWidget):
         # Ottieni il testo inserito nella casella di input
         logging.debug("Bottone premuto")
         input_text = self.input_box.text()
+        self.progress_dialog = None
         # Verifica se è un URL
         if not re.match(r"^https?://", input_text):
             # Mostra un pop-up di errore
@@ -334,7 +335,8 @@ class MainWindow(QWidget):
         else:
             QMessageBox.warning(
                 self, "Errore", "Il testo inserito non è un URL valido")
-            self.progress_dialog.hide()
+            if self.progress_dialog:
+                self.progress_dialog.hide()
 
     def populateCategoryTable(self):
         self.table1.setEnabled(True)
