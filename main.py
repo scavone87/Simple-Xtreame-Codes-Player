@@ -27,6 +27,7 @@ class MainWindow(QWidget):
 
     def __init__(self):
         super().__init__()
+        self.expired = False
         self.table1 = QTableWidget()
         self.table2 = QTableWidget()
         self.table3 = QTableWidget()
@@ -268,7 +269,7 @@ class MainWindow(QWidget):
     def onDropdownChanged(self):
         self.clearContent()
 
-        if xtream.username:
+        if xtream.username and not self.expired:
             # Ottieni l'indice del valore selezionato
             selected_index = self.combo_box.currentIndex()
             # Seleziona il dataframe da utilizzare in base all'indice selezionato
@@ -324,6 +325,11 @@ class MainWindow(QWidget):
           self.label3.setText(f"Scadenza: {expire_date}")
           logging.debug(
               f"{message}, - Status: {status} - Data di scadenza: {expire_date}")
+          if status == "Expired":
+            self.expired = True
+            QMessageBox.warning(self, "Account Scaduto", "Il tuo account è scaduto.")
+            self.progress_dialog.hide()
+            return  # Interrompe l'esecuzione ulteriore del metodo
           self.option_category = self.combo_box.currentText()
           if self.option_category == xtream.seriesType:
             self.hbox.addWidget(self.table3)
