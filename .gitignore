@@ -1,3 +1,8 @@
 /__pycache__
 /.vscode
 /links_playlists.md
+/output
+*.webp
+*.ico
+*.aip
+*.msi
